@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Bookings</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 20px;
+        }
+        .button-container {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #resetAllButton {
+            background-color: #f44336;
+        }
+        #resetAllButton:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+        import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDXUhmTot3crmMNKsuM-uWXWtSwRgkZXSc",
+            authDomain: "smartparkingg-f7952.firebaseapp.com",
+            databaseURL: "https://smartparkingg-f7952-default-rtdb.firebaseio.com",
+            projectId: "smartparkingg-f7952",
+            storageBucket: "smartparkingg-f7952.appspot.com",
+            messagingSenderId: "935237553409",
+            appId: "1:935237553409:web:ba7a7d8532a100bc09df00",
+            measurementId: "G-RYT8KH7S5W"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        function resetBooking(bookNumber) {
+            const updates = {
+                [`bookings/book${bookNumber}`]: 1
+            };
+
+            update(ref(database), updates)
+                .then(() => {
+                    alert(`Book ${bookNumber} reset successfully!`);
+                })
+                .catch((error) => {
+                    console.error(`Error resetting book ${bookNumber}:`, error);
+                });
+        }
+
+        function resetAllBookings() {
+            const updates = {
+                'bookings/book1': 1,
+                'bookings/book2': 1,
+                'bookings/book3': 1,
+                'bookings/book4': 1,
+                'total': 0  // Reset total to 0
+            };
+
+            update(ref(database), updates)
+                .then(() => {
+                    alert('All bookings and total reset successfully!');
+                })
+                .catch((error) => {
+                    console.error('Error resetting all bookings:', error);
+                });
+        }
+
+        // Event listeners for individual book reset buttons
+        document.getElementById('resetBook1').addEventListener('click', () => resetBooking(1));
+        document.getElementById('resetBook2').addEventListener('click', () => resetBooking(2));
+        document.getElementById('resetBook3').addEventListener('click', () => resetBooking(3));
+        document.getElementById('resetBook4').addEventListener('click', () => resetBooking(4));
+        
+        // Event listener for reset all button
+        document.getElementById('resetAllButton').addEventListener('click', resetAllBookings);
+    </script>
+</head>
+<body>
+    <h1>Parking Booking Reset</h1>
+    <div class="button-container">
+        <button id="resetBook1">Reset Book 1</button>
+        <button id="resetBook2">Reset Book 2</button>
+        <button id="resetBook3">Reset Book 3</button>
+        <button id="resetBook4">Reset Book 4</button>
+        <button id="resetAllButton">Reset All Bookings</button>
+    </div>
+</body>
+</html>
